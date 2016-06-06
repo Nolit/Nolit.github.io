@@ -1,0 +1,142 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>舞台裏勉強会 | Hexo</title>
+  <meta name="author" content="John Doe">
+
+  
+  <meta name="description" content="改行コードwinodws:CR+LFOsX:CRLinux:LF
+##文字化け読み込み時の文字コードと書き込み時の文字コードが違うと起きる
+###UTF8
+
+初めの1バイトを読むと何バイト読んだら良いか分かる
+
+
+##データベース文書はコンピュータ上では一列に並べるので大量のデータだと最後の方を参照">
+  
+  
+
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+  
+</head>
+
+<body>
+  <header id="header" class="inner"><nav>
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+</nav></header>
+  <div id="content" class="inner"><article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <header>
+    
+  
+    <h1 class="title">舞台裏勉強会</h1>
+  
+
+    <time datetime="2016-05-15T00:57:39.089Z">
+  <span class="day">15</span><span class="month">May</span>
+</time>
+  </header>
+  <div class="entry-content">
+    
+      <h2 id="改行コード"><a href="#改行コード" class="headerlink" title="改行コード"></a>改行コード</h2><p>winodws:CR+LF<br>OsX:CR<br>Linux:LF</p>
+<p>##文字化け<br>読み込み時の文字コードと書き込み時の文字コードが違うと起きる</p>
+<p>###UTF8</p>
+<ul>
+<li>初めの1バイトを読むと何バイト読んだら良いか分かる</li>
+</ul>
+<hr>
+<p>##データベース<br>文書はコンピュータ上では一列に並べるので大量のデータだと最後の方を参照するのに時間が掛かる<br>そこで登場したのがDB</p>
+<h2 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h2><p>Q.ツリーに追加するときのルール<br>A.ツリーを横並びに並べて真ん中を調べて半分ずつ切っていく</p>
+<h2 id="ニューロ型データベース"><a href="#ニューロ型データベース" class="headerlink" title="ニューロ型データベース"></a>ニューロ型データベース</h2><p>テーブルのテーブルを持つ？</p>
+<h2 id="Active-Directory"><a href="#Active-Directory" class="headerlink" title="Active Directory"></a>Active Directory</h2><p>ADにはいろんな種類がある</p>
+<p>###OSの仕事</p>
+<ul>
+<li>ジョブ管理</li>
+<li>入出力管理</li>
+<li>リソース管理(認証・承認)</li>
+</ul>
+<hr>
+<p>###認証管理する意味</p>
+<ul>
+<li>機密の保持</li>
+<li>リソースの無尽蔵な利用を防ぐ</li>
+</ul>
+<hr>
+<p>3年ぐらい使うならクラウドは高い</p>
+<hr>
+<h2 id="仮想化技術"><a href="#仮想化技術" class="headerlink" title="仮想化技術"></a>仮想化技術</h2><p>例：virtualBox<br>OS上でアプリケーションとして動く</p>
+<h2 id="準仮想化技術"><a href="#準仮想化技術" class="headerlink" title="準仮想化技術"></a>準仮想化技術</h2><p>例：vmwere<br>ハイパーバイザをファームウェア上で動く</p>
+<hr>
+<p>WSLはハイパーバイザ上で動くOS<br>windowsからbashを起動するとハイパーバイザ上でubuntuらしきものが動く<br>windowsのプロセス上からもちろんみれない！！！</p>
+<p>層<br>Application<br>OS<br>Driver<br>HAL<br>FarmWere<br>HardWere</p>
+
+    
+    
+    <footer class="meta">
+      
+      
+      
+    </footer>
+    
+  </div>
+  
+</article></div>
+  <footer id="footer" class="inner"><div class="social alignright">
+  
+  
+  
+  
+  <a class="rss" href="/atom.xml" title="RSS">RSS</a>
+</div>
+<p>
+  
+  &copy; 2016 John Doe
+  
+</p>
+<div class="clearfix"></div></footer>
+  <script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+<div id="phasebeam">
+  <canvas></canvas>
+  <canvas></canvas>
+  <canvas></canvas>
+</div>
+<script src="/js/phasebeam.js"></script>
+</body>
+</html>
