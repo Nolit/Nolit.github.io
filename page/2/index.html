@@ -44,22 +44,64 @@
   <header>
     
   
-    <h1 class="title"><a href="/2016/04/23/laravel_middlewere/">Laravel MiddleWere</a></h1>
+    <h1 class="title"><a href="/2016/05/24/why_make_it_by_OO/">「なぜオブジェクト指向で作るのか」を読んでみて</a></h1>
   
 
-    <time datetime="2016-04-23T01:04:07.855Z">
-  <span class="day">23</span><span class="month">Apr</span>
+    <time datetime="2016-05-24T14:09:34.640Z">
+  <span class="day">24</span><span class="month">May</span>
 </time>
   </header>
   <div class="entry-content">
     
-      <h3 id="Kernel"><a href="#Kernel" class="headerlink" title="Kernel"></a>Kernel</h3><p>App\Http\Kernelでミドルウェアの設定をする  </p>
-<ul>
-<li>ミドルウェアをシステムの全HTTPリクエストに対して実行したい場合は、$middleware に登録</li>
-<li>ミドルウェアを特定のルートに対して実行したい場合は、$routeMiddleware にキーと共に登録  </li>
+      <p>オブジェクト指向を意識して設計してる時に、「一体何を抽象化してるんだ？」「そもそも抽象化とは何？」「オブジェクト指向って何？って聞かれて説明出来るのか」<br>こんな思いから<strong>オブジェクト指向とはなにか</strong>っていう基礎の部分を学習してみる</p>
+<h1 id="歴史"><a href="#歴史" class="headerlink" title="歴史"></a>歴史</h1><p>初めのOOPはシミュラ67という言語<br>クラス・継承・ポリモフィズムという仕組みを持っていた<br>この仕組みを取り入れたsmalltalkという言語がその後出た<br>OOP以前の構造化言語ではローカル変数よりも長いスコープが必要な場合、グローバル変数を使用するしかなく、<br>グローバル変数の値が異常だった場合、<strong>グローバル変数を参照することが出来る全てのサブルーチン</strong>から問題を切り分けるのが大変だった<br>また、サブルーチン単位でしか共通部品化出来なかった</p>
+<hr>
+<h1 id="OOPの三大要素"><a href="#OOPの三大要素" class="headerlink" title="OOPの三大要素"></a>OOPの三大要素</h1><p>OOPの三大要素はクラス・ポリモフィズム・継承</p>
+<hr>
+<h2 id="クラス"><a href="#クラス" class="headerlink" title="クラス"></a>クラス</h2><p>「まとめて」「隠して」「たくさん作る」</p>
+<h3 id="まとめる"><a href="#まとめる" class="headerlink" title="まとめる"></a>まとめる</h3><ul>
+<li>関連するサブルーチンとグローバル変数をクラスとしてまとめる</li>
+<li>クラスという単位に分割して保守性が向上</li>
+<li>クラス単位で分割することによって、サブルーチンが探しやすくなった</li>
 </ul>
-<h3 id="Controller"><a href="#Controller" class="headerlink" title="Controller"></a>Controller</h3><p>$routeMiddlewareに登録したミドルウェアはコントローラのコンストラクタで定義する<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    $this-&gt;middleware(<span class="string">'auth'</span>, [<span class="string">'except'</span> =&gt; [<span class="string">'index'</span>, <span class="string">'show'</span>]]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="MiddleWere"><a href="#MiddleWere" class="headerlink" title="MiddleWere"></a>MiddleWere</h3><p>登録するとリクエストに対してhandleメソッドを実行する<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span><span class="params">($request, Closure $next)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ($this-&gt;auth-&gt;guest()) &#123;</span><br><span class="line">        <span class="comment">// ログインしていない時</span></span><br><span class="line">        <span class="keyword">if</span> ($request-&gt;ajax()) &#123;</span><br><span class="line">            <span class="keyword">return</span> response(<span class="string">'Unauthorized.'</span>, <span class="number">401</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> redirect()-&gt;guest(<span class="string">'auth/login'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ログインしている時</span></span><br><span class="line">    <span class="keyword">return</span> $next($request);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="隠す"><a href="#隠す" class="headerlink" title="隠す"></a>隠す</h3><ul>
+<li>メソッドやフィールドをクラス外から触れないようにする</li>
+<li>問題発生時に<strong>外部からの操作が原因かもしれないという可能性を排除</strong>出来る</li>
+</ul>
+<h3 id="たくさん作る"><a href="#たくさん作る" class="headerlink" title="たくさん作る"></a>たくさん作る</h3><ul>
+<li>インスタンスはそれぞれが状態を持っているのでクラスを利用する側で<strong>状態を管理しなくて良い</strong></li>
+</ul>
+<hr>
+<h2 id="ポリモフィズム"><a href="#ポリモフィズム" class="headerlink" title="ポリモフィズム"></a>ポリモフィズム</h2><p><strong><em>共通メインルーチンを作るための仕組み</em></strong></p>
+<ul>
+<li><h4 id="共通サブルーチン"><a href="#共通サブルーチン" class="headerlink" title="共通サブルーチン"></a>共通サブルーチン</h4><p>呼び出される側のロジックを一つにまとめる<br>呼び出す側が増えてもサブルーチンを変更しなくて良い</p>
+</li>
+<li><h4 id="共通メインルーチン"><a href="#共通メインルーチン" class="headerlink" title="共通メインルーチン"></a>共通メインルーチン</h4><p><strong>呼び出す側のロジック</strong>を一つにまとめる<br>呼び出される側が増えてもメインルーチンを変更しなくて良い</p>
+</li>
+</ul>
+<p>ポリモフィズムの実装は僕の知っている限り2種類</p>
+<ol>
+<li>親クラス・インターフェースを使う</li>
+<li>ダックタイピング</li>
+</ol>
+<hr>
+<h2 id="継承"><a href="#継承" class="headerlink" title="継承"></a>継承</h2><p>継承には２つの役割がある</p>
+<ol>
+<li>クラスの共通する定義を別のクラスにまとめること</li>
+<li>親クラスに対してのポリモフィズムを認めること</li>
+</ol>
+<p>2はクラスの同一視について書いている<br>ポリモフィズムは共通メインルーチンを作るための仕組みと書いた<br>この共通メインルーチンというのが親クラスのメソッド群のこと<br>親クラスのメソッド群は子クラスで使えるので、無数に子クラスが存在していてもその子クラス達は親クラスとして扱える<br>これがクラスの同一視<br>つまり2のポリモフィズムを認めるとは、同一視した他の子クラスと同じように自分を扱っても良いよってこと<br><em>javaのような強い型付け言語だとコンパイル時にポリモフィズムを保障してくれる</em></p>
+<hr>
+<h1 id="進化したOOPの仕組み"><a href="#進化したOOPの仕組み" class="headerlink" title="進化したOOPの仕組み"></a>進化したOOPの仕組み</h1><p>javaやC#にはクラス・継承・ポリモフィズム以外にも進んだ機能がある</p>
+<h2 id="パッケージ"><a href="#パッケージ" class="headerlink" title="パッケージ"></a>パッケージ</h2><p><strong><em>クラスをまとめる仕組み</em></strong><br>ディレクトリのように階層構造でクラスをまとめる<br>標準的な命名規則を決めることによって全世界で名前の重複を避けることが出来るので、クラスの再利用時に重複を気にしなくて良くなる</p>
+<hr>
+<h2 id="例外"><a href="#例外" class="headerlink" title="例外"></a>例外</h2><p><strong><em>戻り値とは違う形式でメソッドから特別な値を返す仕組み</em></strong><br>例えば三つのメソッドがA-&gt;B-&gt;Cという関係になっていてCでエラーの可能性があるとする<br>もし例外という仕組みが無かった場合エラーコードを直接扱う事になるが、それだと面倒なことが二つある</p>
+<ol>
+<li>プログラム中にエラーコードの判定をしないといけないが、判定処理を忘れていた場合に気付けない</li>
+<li>1.の判定がこの例だとBからAというように連鎖するので、呼び出しが深くなるにつれ面倒になっていく</li>
+</ol>
+<p>例外という仕組みはこの二つを解決してくれる<br>例外という仕組みでは特別なエラー(例外)を返すということをメソッドで宣言しないといけない<br>例外を宣言したメソッドを呼び出す場合、例外を処理するロジックを書かないと実行時又はコンパイル時にエラーになる<br>これで1は解決<br>そして例外という仕組みでは自身でエラー処理をしたくない場合、呼び出し元にエラー処理を任せることが出来る<br>これで2も解決<br>まとめると例外という仕組みは、重複したエラー判定を一か所に出来るし、例外処理を忘れた場合はコンパイラや実行環境が教えてくれるという便利な仕組みである</p>
+<hr>
 
     
     
@@ -90,25 +132,590 @@
   <header>
     
   
-    <h1 class="title"><a href="/2016/04/23/laravel_auth/">Laravel 認証</a></h1>
+    <h1 class="title"><a href="/2016/05/15/off_stage/">舞台裏勉強会</a></h1>
   
 
-    <time datetime="2016-04-23T00:19:49.987Z">
+    <time datetime="2016-05-15T00:57:39.089Z">
+  <span class="day">15</span><span class="month">May</span>
+</time>
+  </header>
+  <div class="entry-content">
+    
+      <h2 id="改行コード"><a href="#改行コード" class="headerlink" title="改行コード"></a>改行コード</h2><p>winodws:CR+LF<br>OsX:CR<br>Linux:LF</p>
+<p>##文字化け<br>読み込み時の文字コードと書き込み時の文字コードが違うと起きる</p>
+<p>###UTF8</p>
+<ul>
+<li>初めの1バイトを読むと何バイト読んだら良いか分かる</li>
+</ul>
+<hr>
+<p>##データベース<br>文書はコンピュータ上では一列に並べるので大量のデータだと最後の方を参照するのに時間が掛かる<br>そこで登場したのがDB</p>
+<h2 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h2><p>Q.ツリーに追加するときのルール<br>A.ツリーを横並びに並べて真ん中を調べて半分ずつ切っていく</p>
+<h2 id="ニューロ型データベース"><a href="#ニューロ型データベース" class="headerlink" title="ニューロ型データベース"></a>ニューロ型データベース</h2><p>テーブルのテーブルを持つ？</p>
+<h2 id="Active-Directory"><a href="#Active-Directory" class="headerlink" title="Active Directory"></a>Active Directory</h2><p>ADにはいろんな種類がある</p>
+<p>###OSの仕事</p>
+<ul>
+<li>ジョブ管理</li>
+<li>入出力管理</li>
+<li>リソース管理(認証・承認)</li>
+</ul>
+<hr>
+<p>###認証管理する意味</p>
+<ul>
+<li>機密の保持</li>
+<li>リソースの無尽蔵な利用を防ぐ</li>
+</ul>
+<hr>
+<p>3年ぐらい使うならクラウドは高い</p>
+<hr>
+<h2 id="仮想化技術"><a href="#仮想化技術" class="headerlink" title="仮想化技術"></a>仮想化技術</h2><p>例：virtualBox<br>OS上でアプリケーションとして動く</p>
+<h2 id="準仮想化技術"><a href="#準仮想化技術" class="headerlink" title="準仮想化技術"></a>準仮想化技術</h2><p>例：vmwere<br>ハイパーバイザをファームウェア上で動く</p>
+<hr>
+<p>WSLはハイパーバイザ上で動くOS<br>windowsからbashを起動するとハイパーバイザ上でubuntuらしきものが動く<br>windowsのプロセス上からもちろんみれない！！！</p>
+<p>層<br>Application<br>OS<br>Driver<br>HAL<br>FarmWere<br>HardWere</p>
+
+    
+    
+    <footer class="meta">
+      
+      
+      
+    </footer>
+    
+  </div>
+  
+</article>
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <header>
+    
+  
+    <h1 class="title"><a href="/2016/04/27/cygwin/">Cygwin</a></h1>
+  
+
+    <time datetime="2016-04-27T07:03:34.906Z">
+  <span class="day">27</span><span class="month">Apr</span>
+</time>
+  </header>
+  <div class="entry-content">
+    
+      <h2 id="Cygwinとは"><a href="#Cygwinとは" class="headerlink" title="Cygwinとは"></a>Cygwinとは</h2><p>windows上でLinuxの環境を作るためのもの</p>
+<p>##概要<br>liunxのプログラムをCygwinランタイムで動ける形にビルドして<br>ビルド後のプログラムをCygwinランタイムで実行という形を取る<br>linuxからwindowsのフォルダを関連付けるために/cygdriveにCドライブをマウントしてる</p>
+
+    
+    
+    <footer class="meta">
+      
+      
+      
+    </footer>
+    
+  </div>
+  
+</article>
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <header>
+    
+  
+    <h1 class="title"><a href="/2016/04/24/chihiro/">千と千尋の神隠し</a></h1>
+  
+
+    <time datetime="2016-04-24T07:37:17.636Z">
+  <span class="day">24</span><span class="month">Apr</span>
+</time>
+  </header>
+  <div class="entry-content">
+    
+      <p>“I’ll miss you, Chihiro. Your best friend, Rumi.”</p>
+<p>Dad: Chihiro. Chihiro, we’re almost there.</p>
+<p>Mom: This really is in the middle of nowhere. I’m gonna have to go to the next town to shop.</p>
+<p>Dad: We’ll just have to learn to like it. Look, Chihiro. There’s your new school. Looks great, doesn’t it?</p>
+<p>Mom: It doesn’t look so bad.</p>
+<p>Chihiro: It’s gonna stink. I liked my old school. Mom! My flowers are dying!</p>
+<p>Mom: I told you not to smother them like that. We’ll put them in water when we get to our new home.</p>
+<p>Chihiro: I finally get a bouquet, and it’s a goodbye present. That’s depressing.</p>
+<p>Mom: Daddy bought you a rose for your birthday. Don’t you remember?</p>
+<p>Chihiro: Yeah, one. Just one rose isn’t a bouquet.</p>
+<p>Mom: Hold on to your card. I’m opening the window. And quit whining. It’s fun to move to a new place. It’s an adventure.</p>
+<p>Dad: Wait. Did I take the wrong turn? This can’t be right.</p>
+<p>Mom: Look, there’s our house. </p>
+<p>Dad: Huh?</p>
+<p>Mom: It’s that blue one on the end.</p>
+<p>Dad: Oh, you’re right. I must have missed the turn-off. This road should get us *there.</p>
+<p>Mom: Honey, don’t take a short cut. You always get us lost.</p>
+<p>Dad: Trust me. It’s gonna work.</p>
+<p>Chihiro: What are those stones? They look like little houses.</p>
+<p>Mom: They’re shrines. Some people think little spirits live there.</p>
+<p>Chihiro: Dad, I think we ‘re lost. </p>
+<p>Dad: We’re fine. I’ve got four-wheel drive.</p>
+<p>Mom: Sit down, please, sweetie.</p>
+<p>Mom: Slow down! You’re gonna kill us.</p>
+<p>Dad: What’s that?</p>
+<p>Chihiro: What’s this old building? </p>
+<p>Dad: It looks like an entrance.</p>
+<p>Mom: Honey, get back in the car. We’re going to be late. Chihiro. Oh, for heaven’s sake.</p>
+<p>Chihiro: The wind’s pulling us in. </p>
+<p>Mom: What is it?</p>
+<p>Dad: Come on. Let’s go in. I wanna see what’s on the other side.</p>
+<p>Chihiro: I’m not going. It gives me the creeps.</p>
+<p>Dad: Don’t be such a caredy-cat, Chihiro. Let’s just take a look.</p>
+<p>Mom: The movers will get to our house before we do.</p>
+<p>Dad: It’s all right. They’ve got the keys. They can start without us.</p>
+<p>Mom: All right. Just a quick look. </p>
+<p>Chihiro: Forget it. I’m not going. Come on, you guys. Let’s get out of here.</p>
+<p>Dad: Come on, honey. It’ll be fun. </p>
+<p>Chihiro: I’m not going!</p>
+<p>Mom: Chihiro, just wait in the car then.</p>
+<p>Chihiro: But, Mom! Wait for me!</p>
+<p>Dad: Everybody, watch your step.</p>
+<p>Mom: Chihiro, don’t cling like that. You’ll make me trip.</p>
+<p>Chihiro: What is this place? </p>
+<p>Mom: Oh, do you hear that?</p>
+<p>Chihiro : It sounds like a train. </p>
+<p>Mom: We must be near a train station.</p>
+<p>Dad: Come on. Let’s go check it out.</p>
+<p>Dad: This building’s not old. It’s fake. These stones are just made of plaster.</p>
+<p>Mom: What are those weird buildings? </p>
+<p>Dad: I knew it. It’s an abandoned theme park. See? They built them everywhere in the early ’90s. Then the economy went bad, and they all went bankrupt. This must be one’a them.</p>
+<p>Chihiro: Where are you going? You said just a quick look. Now let’s go back. Hey!</p>
+<p>Chihiro: Did you hear that building? It was moaning.</p>
+<p>Mom: It’s just the wind. Oh, what a beautiful place. We should have brought our lunch. Then we could have had a picnic.</p>
+<p>Dad: Look. They were planning to put a river here.</p>
+<p>Dad: Hey, you smell that? Something smells delicious. </p>
+<p>Mom: Yeah, and I’m starving.</p>
+<p>Dad: Maybe this theme park’s still in business. Let’s go.</p>
+<p>Mom: Chihiro, hurry it up.</p>
+<p>Chihiro: Wait a minute.</p>
+<p>Dad: Over there.</p>
+<p>Dad: This way.</p>
+<p>Mom: How strange. They’re all restaurants.</p>
+<p>Chihiro: Where is everybody?</p>
+<p>Dad: Ah, there it is. Hey, I found it! </p>
+<p>Dad: Hey, you gotta see this. In here. </p>
+<p>Mom: Ah, look at this.</p>
+<p>Dad: Hello in there! Does anybody work here?</p>
+<p>Mom: Come in, Chihiro. It looks delicious.</p>
+<p>Dad: Anybody?</p>
+<p>Mom: Don’t worry, honey. We can pay the bill when they get back.</p>
+<p>Dad: Good plan. Hey, that looks great.</p>
+<p>Mom: I wonder what this is called.</p>
+<p>Mom: Oh, it’s delicious. Chihiro, you have to taste this.</p>
+<p>Chihiro: I don’t want any. We’re gonna get in trouble. Let’s just get out of here.</p>
+<p>Dad: Don’t worry. You’ve got Daddy here. He’s got credit cards and cash.</p>
+<p>Mom: Chihiro, you have to try this. It’s so tender.</p>
+<p>Dad: Mustard?</p>
+<p>Mom: Thank you.</p>
+<p>Chihiro: Come on, you guys. You can’t.</p>
+<p>Chihiro: That’s weird.</p>
+<p>Chihiro: It’s a bathhouse.</p>
+<p>Chihiro: There’s the train.</p>
+<p>Haku: You shouldn’t be here. Get out of here now!</p>
+<p>Chihiro: What? </p>
+<p>Haku: It’s almost night. Leave, before it gets dark. They’re lighting the lamps. Get out of here. You’ve gotta get across the river. Go! I’ll distract ’em.</p>
+<p>Chihiro: What’s up with him?</p>
+<p>Chihiro: Mom! Dad! Come on! Quit eating! Let’s get out of here!</p>
+<p>Chihiro: Mom! Dad! Where are you?</p>
+<p>Chihiro: Mommy!</p>
+<p>Chihiro: Water?</p>
+<p>Chihiro: What? I’m dreaming! I’m dreaming! Come on. Wake up! Wake up! Wake up. </p>
+<p>Chihiro: It’s just a dream. Just a dream. Go away. Away. Disappear.</p>
+<p>Chihiro: I’m see-through! It’s just a bad dream.</p>
+<p>Haku: Don’t be afraid. I just wanna help you.</p>
+<p>Chihiro: No! No! No!</p>
+<p>Haku: Open your mouth and eat this. You have to eat some food from this world, or else you’ll disappear. </p>
+<p>Chihiro: No!</p>
+<p>Haku: Don’t worry. It won’t turn you into a pig. Chew it and swallow.</p>
+<p>Haku: There you go. You’re all better. See for yourself..</p>
+<p>Chihiro: I’m okay.</p>
+<p>Haku: You see? Now, come with me. </p>
+<p>Chihiro: Where are my mom and dad? They didn’t really turn into pigs, did they?</p>
+<p>Haku: You can’t see them now, but you will.</p>
+<p>Haku: Don’t move. That bird’s looking for you. You ‘ve gotta get out of here.</p>
+<p>Chihiro: Ah! My legs! I can’t stand up. Help! What do I do?</p>
+<p>Haku: Calm down. Take a deep breath.</p>
+<p>Haku: In the name of the wind and water within thee, unbind her. Get up.</p>
+<p>Haku: You have to hold your breath while we cross the bridge. Even the tiniest breath will break the spell, and then everyone will see you.</p>
+<p>Chihiro: I’m scared.</p>
+<p>Haku: Now, just stay calm.</p>
+<p>Guy: Welcome. Welcome. Always nice to see you. Welcome back. Welcome. Welcome.</p>
+<p>Haku: I’m back from my mission. </p>
+<p>Guy: Ah, welcome. Welcome back, Master Haku.</p>
+<p>Haku: Take a deep breath. Hold it.</p>
+<p>Ladies: Welcome. Welcome. Welcome back. Good to see you.</p>
+<p>Haku: Hang on. Almost there.</p>
+<p>Frog: Master Haku! Where ‘ve you been?</p>
+<p>Frog: Wha… A human?</p>
+<p>Haku; Let’s go!</p>
+<p>Guys: Master Haku! Master Haku!</p>
+<p>Guy: Here. Hurry. Boy, boy, boy, it stinks up the place.</p>
+<p>Haku: They know you’re here.</p>
+<p>Chihiro: I’m sorry. I took a breath.</p>
+<p>Haku: No, Chihiro, you did very well. Listen carefully to what I tell you to do. You can’t stay here. They’ll find you, and you’ll never get to rescue your parents. I’ll create a diversion while you escape.</p>
+<p>Chihiro: No! Don’t leave me. I don’t wanna be alone.</p>
+<p>Haku: You don’t have any choice if you want to help your parents. This is what you have to do.</p>
+<p>Chihiro: They did turn into pigs. I wasn’t dreaming.</p>
+<p>Haku: Don’t worry. Now, when things quiet down, go out through the back gate. Go all the way down the stairs until you reach the boiler room, where they stoke the fiires. There, you’ll fiind Kamajii, the boiler man.</p>
+<p>Chihiro: Kamajii?</p>
+<p>Haku: Tell him you want to work here. Even if he refuses, you must insist. If you don’t get a job, Yubaba will turn you into an animal.</p>
+<p>Chihiro: Yubaba. Huh?</p>
+<p>Haku: You’ll see. She’s the witch who rules the bathhouse. Kamajii will try to turn you away or trick you into leaving, but just keep asking for work. It’ll be hard work, but you’ll be able to stay here. Then, even Yubaba can’t harm you.</p>
+<p>Chihiro: Mm-hmm.</p>
+<p>Lady: Master Haku? </p>
+<p>Guy: Master Haku, where are you?</p>
+<p>Haku: I have to go. And don’t forget, Chihiro, I’m your friend.</p>
+<p>Chihiro: How did you know my name’s Chihiro?</p>
+<p>Haku: I’ve known you since you were very small. Good luck. And whatever you do, don’t make a sound.</p>
+<p>Guy: Master Haku.</p>
+<p>Haku: Calm down. I’m coming.</p>
+<p>Guy: Master. Haku, Yubaba wants to see you.</p>
+<p>Haku: I know. It’s about my mission, right?</p>
+<p>Chihiro: Uh, hello? Excuse me.</p>
+<p>Chihiro: Uh, hello?</p>
+<p>Chihiro: Uh, hello. Are you Kamajii?</p>
+<p>Kamajii: Eh?</p>
+<p>Chihiro: Haku told me to come here and ask you for work. Could you give me a job, please?</p>
+<p>Kamajii: Four bath tokens at once. Come on. Get to work, you little runts. Yeah, I’m Kamajii, slave to the boiler that heats the baths. Move it,ya stupid soot balls.</p>
+<p>Chihiro: Please, I’ve gotta get a job here.</p>
+<p>Kamajii: I don’t need any help. The place is full of soot. I just cast a spell on them, and I’ve got all the workers I need.</p>
+<p>Chihiro: Oh. Sorry. Wait. Just a second.</p>
+<p>Kamajii: Out’a the way.</p>
+<p>Chihiro: What should I do with this? Should I leave it here?</p>
+<p>Kamajii: Finish what you started, human.</p>
+<p>Kamajii: Hey, you runts. You wanna turn back into soot? And you, back off. You can’t just take someone else’s job. If they don’t work, the spell wears off. They turn back into soot. There’s no work for you here, got it? Try somewhere else.</p>
+<p>Kamajii: You soot balls got a problem? Now, get back to work!</p>
+<p>Rin: Chow time. What’s going on? Are you guys fighting again?</p>
+<p>Rin: Where’s your other bowl? From yesterday? I keep telling you to leave it out, Kamajii.</p>
+<p>Kamajii: Meal time! Take a break.</p>
+<p>Rin: A human! You’re in trouble. You’re the one everyone’s looking for.</p>
+<p>Kamajii: She’s my granddaughter.</p>
+<p>Rin: Granddaughter?</p>
+<p>Kamajii: She said she wants to work here, but I’ve got all the help I need. Will you take her to see Yubaba? She’s a tough little girl. I think she can handle it.</p>
+<p>Rin: No way. I’m not gonna risk my life.</p>
+<p>Kamajii: What if I give you this roasted newt? Hmm? Mm, it’s a good one. If you want a job, you’ll have to make a deal with Yubaba. She’s the head honcho here.</p>
+<p>Rin: Give me that! Come on, little girl. You better follow me.</p>
+<p>Rin: Can’t you even manage a-a “yes, ma’am” or a “thank you”?</p>
+<p>Chihiro: Yes, ma’am.</p>
+<p>Rin: What a dope. Hurry up.</p>
+<p>Chihiro: Yes, ma’am.</p>
+<p>Rin: Uh, you don’t need your shoes or your socks. Just leave ‘em.</p>
+<p>Chihiro: Yes, ma’am.</p>
+<p>Rin: Thank the boiler man, you idiot. You know he’s really sticking his neck out for you.</p>
+<p>Chihiro: Ow! Thank you, Mr Boiler Man.</p>
+<p>Kamajii: Good luck.</p>
+<p>Rin: We have to go all the way to the top floor. That’s where Yubaba lives.</p>
+<p>Rin: Get over here. You wanna lose your nose?</p>
+<p>Guy: More appetizers.</p>
+<p>Guy: I’ve run out of those.</p>
+<p>Guy: They’re not spicy enough.</p>
+<p>Rin; We’re halfway there. Just stay close. </p>
+<p>Chihiro: Okay.</p>
+<p>Rin: Here we go.</p>
+<p>Rin: The radish spirit. Sorry, sir. This elevator doesn’t go any higher. You’ll have to take another one. Thank you.</p>
+<p>Chihiro: He’s following us.</p>
+<p>Rin: Just don’t look at ‘im.</p>
+<p>Guy: Step out to the right, please, gentlemen. Your rooms are right this way. Rin?</p>
+<p>Rin: What?</p>
+<p>Guy: What’s that smell? It’s human. You smell just like a human.</p>
+<p>Rin: Oh, really?</p>
+<p>Guy: Where’s it coming from, Rin? Come on. You’re hiding something, aren’t you? Show it to me.</p>
+<p>Rin; Is this what you smell?</p>
+<p>Guy: Roasted newt.</p>
+<p>Rin: No way, frog. I’m saving every last bite for myself.</p>
+<p>Guy: Please, just a little bit? Just give me a leg.</p>
+<p>Rin: If you want to go up, pull the lever on your right.</p>
+<p>Aren’t you even going to knock? You’re the most pathetic little girl I’ve ever seen. Well, come in. I said come in!</p>
+<p>Yubaba: Quiet down. You’re making a racket.</p>
+<p>Chihiro: Excuse me? I was wondering if you could give me a job.</p>
+<p>Yubaba: I don’t wanna hear such a stupid request. You’re just a stinking, useless weakling. And this is certainly no place for humans. It’s a bathhouse for the spirits. It’s where they come to replenish themselves. And you humans always make a mess of things, like your parents, who gobbled up the food of the spirits like pigs. They got what they deserved. And you should be punished too. You could be a piglet. Or maybe you’d prefer a lump of coal. I can see you shaking. Actually, I’m impressed you made it this far. But I’m sure you didn’t do it on your own. Let’s thank whoever helped you. Just who was it, dear? Why don’t you tell me?</p>
+<p>Chihiro: Please! Can’t you give me a job?</p>
+<p>Yubaba: Don’t start that again!</p>
+<p>Chihiro: Please! I just wanna work!</p>
+<p>Yubaba: Don’t say that!</p>
+<p>Yubaba: Why in the world do you think I should give you a job? Anyone can see you’re a lazy, spoiled crybaby and you have no manners. This is a high-class place I’m running here. So there’s no job for you. Now get out. I’ve got all the lazy bums I need. Or maybe I’ll give you the most difficult job I’ve got, and work you until you breathe your very last breath.</p>
+<p>Yubaba: Oh, dear! You woke up the baby. Mommy’s here. Be a good boy now. Why are you still here? I told you to leave.</p>
+<p>Chihiro: I want you to give me a job, please!</p>
+<p>Yubaba: Quiet down. You’re scaring the baby. Ooh! Hi, sweetie. Don’t be angry. That’s a good boy.</p>
+<p>Chihiro: I’m not leaving until you give me a job!</p>
+<p>Yubaba: Okay. Okay. Just be quiet. Here comes Mommy. I’m coming to get you.</p>
+
+    
+    
+    <footer class="meta">
+      
+      
+      
+    </footer>
+    
+  </div>
+  
+</article>
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <header>
+    
+  
+    <h1 class="title"><a href="/2016/04/24/english/">学んだ英語</a></h1>
+  
+
+    <time datetime="2016-04-24T07:37:17.636Z">
+  <span class="day">24</span><span class="month">Apr</span>
+</time>
+  </header>
+  <div class="entry-content">
+    
+      <p><a href="http://animescriptenglish.seesaa.net/article/410455708.html" target="_blank" rel="external">英訳サイト</a><br>I’ll miss you<br>寂しくなります<br>this<br>a の代わりに使って強調を表す<br>in the middle of nowhere<br>人里離れた<br>be gonna(be going to)<br>するつもり(前から決めていたこと)<br>to shop<br>買うために<br>just have to<br>～しさえすればよい<br>smother<br>窒息させる<br>I tell 人 to ~<br>~するように言う<br>I told you not to smother<br>私は窒息させないように言いました<br>get to<br>～に到着する<br>stink<br>良くない(子供が良く使う言葉)<br>Hold on to<br>~を離さない<br>It’s fun to ~<br>~することは楽しい<br>wrong<br>違う<br>can’t be<br>～のはずがない<br>must have ～<br>～したに違いない<br>get 人 場所<br>人を場所に連れていく<br>on the end.<br>端っこ<br>Trust me<br>私を信じて<br>It’s gonna work<br>上手くいくだろう<br>pulling us in<br>～を引き寄せる<br>It gives me ～<br>私に～を与える<br>just<br>ちょっと<br>so that<br>~するために<br>hurry it up<br>さっさとしなさい<br>there it is.<br>(そこに)あった<br>be going to do<br>~するつもり、～しそうだ<br>He’s<br>He has(現在完了形)<br>tender<br>柔らかい<br>This way<br>こっちだよ<br>before it gets dark<br>暗くなる前に<br>or else<br>さもないと<br>into<br>変化<br>there you go<br>ほらね<br>all<br>完全に<br>create a diversion<br>注意をそらす<br>Don’t leave me<br>置いていかないで<br>swallow<br>飲み込む</p>
+
+    
+    
+    <footer class="meta">
+      
+      
+      
+    </footer>
+    
+  </div>
+  
+</article>
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <header>
+    
+  
+    <h1 class="title"><a href="/2016/04/23/dom/">DOM</a></h1>
+  
+
+    <time datetime="2016-04-23T03:22:04.549Z">
   <span class="day">23</span><span class="month">Apr</span>
 </time>
   </header>
   <div class="entry-content">
     
-      <p>Laravelでは標準の認証用コントローラAuthControllerがある　別に自分で作っても良い</p>
-<h1 id="AuthControllerクラス"><a href="#AuthControllerクラス" class="headerlink" title="AuthControllerクラス"></a>AuthControllerクラス</h1><p>トレイト：AuthenticatesAndRegistersUsers・ThrottlesLogins;<br>postLogin()：ログインしてくれる</p>
-<h2 id="AuthenticatesAndRegistersUsersトレイト"><a href="#AuthenticatesAndRegistersUsersトレイト" class="headerlink" title="AuthenticatesAndRegistersUsersトレイト"></a>AuthenticatesAndRegistersUsersトレイト</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">postLogin</span><span class="params">(Request $request)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $this-&gt;login($request);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>ログイン処理してくれるpostLogin()の実体はここにある<br>loginメソッドを呼び出してるだけ</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public function login(Request $request)</span><br><span class="line">&#123;</span><br><span class="line">　　$this-&gt;validateLogin($request);</span><br><span class="line">　　$throttles = $this-&gt;isUsingThrottlesLoginsTrait();</span><br><span class="line">　　if ($throttles &amp;&amp; $lockedOut = $this-&gt;hasTooManyLoginAttempts($request)) &#123;</span><br><span class="line">   　　 $this-&gt;fireLockoutEvent($request);</span><br><span class="line">    　　return $this-&gt;sendLockoutResponse($request);</span><br><span class="line">　　&#125;</span><br><span class="line">　　$credentials = $this-&gt;getCredentials($request);</span><br><span class="line">　　if (Auth::guard($this-&gt;getGuard())-&gt;attempt($credentials, $request-&gt;has(&apos;remember&apos;))) &#123;</span><br><span class="line">   　　 return $this-&gt;handleUserWasAuthenticated($request, $throttles);</span><br><span class="line">　　&#125;</span><br><span class="line">　　if ($throttles &amp;&amp; ! $lockedOut) &#123;</span><br><span class="line">   　　 $this-&gt;incrementLoginAttempts($request);</span><br><span class="line">　　&#125;</span><br><span class="line">　　return $this-&gt;sendFailedLoginResponse($request);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>loginメソッドにログイン処理の実装がある<br>1行目にvalidateLogin($request)でバリデートしてる<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">validateLogin</span><span class="params">(Request $request)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    $this-&gt;validate($request, [</span><br><span class="line">        $this-&gt;loginUsername() =&gt; <span class="string">'required'</span>, <span class="string">'password'</span> =&gt; <span class="string">'required'</span>,</span><br><span class="line">    ]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>Controllerクラスのvalidate()がここで呼び出されてる<br>バリデーションの内容がここで定義されてる<br>デフォルトではloginUsername()が返す’username’と’password’にrequiredがかかる<br>loginUsername()はusernameプロパティがあるかどうか調べて無かったらusernameを返す</p>
-<h2 id="validateメソッド"><a href="#validateメソッド" class="headerlink" title="validateメソッド"></a>validateメソッド</h2><p>実装はValidatesRequestsトレイトにある<br>実際にはRequestとバリデーションの連想配列からValidatorインスタンスを作成してfailesを呼び出してる<br>検証に引っかかるならValidationExceptionをthrowする<br>どこかで例外を補足して前のページにリダイレクトするみたい<br><a href="http://readouble.com/laravel/5/0/0/ja/validation.html" target="_blank" rel="external">http://readouble.com/laravel/5/0/0/ja/validation.html</a></p>
-<h2 id="getCredentialsメソッド"><a href="#getCredentialsメソッド" class="headerlink" title="getCredentialsメソッド"></a>getCredentialsメソッド</h2><p>usernameとpasswordをキーとしてRequestに含まれるキーと紐づく値の連想配列を返す  </p>
-<h2 id="Auth-attepmtメソッド"><a href="#Auth-attepmtメソッド" class="headerlink" title="Auth::attepmtメソッド"></a>Auth::attepmtメソッド</h2><p>第一引数の連想配列とconfig/auth.phpの内容からDBに認証情報が正しいか問い合わせる<br>第二引数ではリクエストにrememberが含まれてるかを調べて存在するならremember_tokenカラムに値を入れて自動ログイン出来るようにする  </p>
+      <p>HTML・XMLをプログラムから扱う為の仕様<br>各要素をノードとしツリー構造で表していてDOMツリーという<br>javascriptがページの遷移無しに一部分だけ表示内容を変える事が出来るのは<br>DOMツリーのノードだけを変えているから</p>
+
+    
+    
+    <footer class="meta">
+      
+      
+      
+    </footer>
+    
+  </div>
+  
+</article>
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <header>
+    
+  
+    <h1 class="title"><a href="/2016/04/23/ajax/">Ajax</a></h1>
+  
+
+    <time datetime="2016-04-23T03:07:51.612Z">
+  <span class="day">23</span><span class="month">Apr</span>
+</time>
+  </header>
+  <div class="entry-content">
+    
+      <p>サーバと非同期で通信しながらページを動的に変えるための技術<br>いくつかの技術の集合体</p>
+<h3 id="例"><a href="#例" class="headerlink" title="例"></a>例</h3><p>Googleマップ</p>
+<h3 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h3><ul>
+<li>サーバと非同期で通信を行う</li>
+<li>ページを動的に変える為にJavaScriptを使ってDOMを変更</li>
+<li>複数のデータが送られても何のデータか分かりやすいxmlを使う<br>上記三つのやり方が一般的でこれらをまとめてajaxと名前を付けた</li>
+</ul>
+
+    
+    
+    <footer class="meta">
+      
+      
+      
+    </footer>
+    
+  </div>
+  
+</article>
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <header>
+    
+  
+    <h1 class="title"><a href="/2016/04/23/php_methods/">PHP Methods</a></h1>
+  
+
+    <time datetime="2016-04-23T01:06:46.655Z">
+  <span class="day">23</span><span class="month">Apr</span>
+</time>
+  </header>
+  <div class="entry-content">
+    
+      <h2 id="property-exists-クラス名またはインスタンス-プロパティ名"><a href="#property-exists-クラス名またはインスタンス-プロパティ名" class="headerlink" title="property_exists(クラス名またはインスタンス, プロパティ名)"></a>property_exists(クラス名またはインスタンス, プロパティ名)</h2><p>クラスにプロパティがあるか調べてboolを返す<br>PHPでは親クラスにプロパティを用意しなくて実装時にプロパティが存在するか調べるやりかたをするみたい<br>例：return property_exists($this, ‘username’) ? $this-&gt;username : ‘email’;</p>
+
+    
+    
+    <footer class="meta">
+      
+      
+      
+    </footer>
+    
+  </div>
+  
+</article>
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <header>
+    
+  
+    <h1 class="title"><a href="/2016/04/23/php_trait/">PHP Trait</a></h1>
+  
+
+    <time datetime="2016-04-23T01:06:06.550Z">
+  <span class="day">23</span><span class="month">Apr</span>
+</time>
+  </header>
+  <div class="entry-content">
+    
+      <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ThrottlesLogins::class, class_uses_recursive(get_class($this))</span><br></pre></td></tr></table></figure>
+<p>多分これでクラスの中にトレイトがあるか調べてる</p>
+
+    
+    
+    <footer class="meta">
+      
+      
+      
+    </footer>
+    
+  </div>
+  
+</article>
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <header>
+    
+  
+    <h1 class="title"><a href="/2016/04/23/laravel_middlewere/">Laravel MiddleWere</a></h1>
+  
+
+    <time datetime="2016-04-23T01:04:07.855Z">
+  <span class="day">23</span><span class="month">Apr</span>
+</time>
+  </header>
+  <div class="entry-content">
+    
+      <h3 id="Kernel"><a href="#Kernel" class="headerlink" title="Kernel"></a>Kernel</h3><p>App\Http\Kernelでミドルウェアの設定をする  </p>
+<ul>
+<li>ミドルウェアをシステムの全HTTPリクエストに対して実行したい場合は、$middleware に登録</li>
+<li>ミドルウェアを特定のルートに対して実行したい場合は、$routeMiddleware にキーと共に登録  </li>
+</ul>
+<h3 id="Controller"><a href="#Controller" class="headerlink" title="Controller"></a>Controller</h3><p>$routeMiddlewareに登録したミドルウェアはコントローラのコンストラクタで定義する<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    $this-&gt;middleware(<span class="string">'auth'</span>, [<span class="string">'except'</span> =&gt; [<span class="string">'index'</span>, <span class="string">'show'</span>]]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="MiddleWere"><a href="#MiddleWere" class="headerlink" title="MiddleWere"></a>MiddleWere</h3><p>登録するとリクエストに対してhandleメソッドを実行する<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span><span class="params">($request, Closure $next)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ($this-&gt;auth-&gt;guest()) &#123;</span><br><span class="line">        <span class="comment">// ログインしていない時</span></span><br><span class="line">        <span class="keyword">if</span> ($request-&gt;ajax()) &#123;</span><br><span class="line">            <span class="keyword">return</span> response(<span class="string">'Unauthorized.'</span>, <span class="number">401</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> redirect()-&gt;guest(<span class="string">'auth/login'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ログインしている時</span></span><br><span class="line">    <span class="keyword">return</span> $next($request);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
     
     
@@ -127,6 +734,8 @@
   
     <a href="/" class="alignleft prev">Prev</a>
   
+  
+    <a href="/page/3/" class="alignright next">Next</a>
   
   <div class="clearfix"></div>
 </nav></div>
