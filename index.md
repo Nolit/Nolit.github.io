@@ -2,15 +2,6 @@
 layout: default
 ---
 
-# Yuma Mizuyabu
-
-Software Engineer based in the UK.  
-I keep notes on cooking, development, music practice, and how I spend my time.  
-This site is a quiet alternative to social media.
-
-## Links
-- [LinkedIn](https://www.linkedin.com/in/yuma-mizuyabu)
-
 ## Contents
 - 🍳 [Cooking](/cooking/)  
   Photos and short notes from daily cooking.
