@@ -1,7 +1,7 @@
 theme: jekyll-theme-minimal
 title: Yuma Mizuyabu
-description: Personal notes on cooking, coding, and daily life
-github_username: mizuyabu
+description: Software Engineer based in the UK. I keep notes on cooking, development, music practice, and how I spend my time.
+github_username: Nolit
 social_links:
   - { platform: linkedin, user_url: "https://www.linkedin.com/in/yuma_mizuyabu" }
 markdown: kramdown
