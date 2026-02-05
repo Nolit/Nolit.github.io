@@ -1,9 +1,10 @@
 theme: jekyll-theme-minimal
 title: Yuma Mizuyabu
 description: Software Engineer based in the UK. I keep notes on cooking, development, music practice, and how I spend my time.
-github_username: Nolit
-social_links:
-  linkedin: yuma_mizuyabu
+minima:
+  social_links:
+    linkedin: yuma_mizuyabu
+    github: Nolit
 markdown: kramdown
 lang: en
 timezone: Europe/London
