@@ -3,7 +3,7 @@ layout: default
 title: Recipes
 ---
 
-# Index
+# Recipes
 
 {% assign current_parts = page.path | split: "/" %}
 {% assign current_filename = current_parts | last %}
