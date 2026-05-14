@@ -4,6 +4,9 @@ layout: default
 
 # Cooking
 
+- 🍳 [Recipes](./recipes/index.md)  
+- 🍳 [Events](./events/index.md)  
+
 ## キノコパスタ
 乾燥ポルチーニ・椎茸・マッシュルーム・トリュフオイルとキノコを入れたのだが、思ったより風味が薄かった。
 きのこ単体で嚙んでも味が薄かったので、焼いて水分を飛ばせてなかったと思う。
