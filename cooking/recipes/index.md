@@ -5,38 +5,4 @@ title: Recipes
 
 # Recipes
 
-{% assign current_parts = page.path | split: "/" %}
-{% assign current_filename = current_parts | last %}
-{% assign current_dir = page.path | remove: current_filename %}
-
-{% assign subdirs = "" | split: "" %}
-
-{% for p in site.pages %}
-  {% if p.path != page.path %}
-    {% assign p_path = p.path %}
-
-    {% if p_path contains current_dir %}
-      {% assign relative_path = p_path | remove_first: current_dir %}
-      {% assign relative_parts = relative_path | split: "/" %}
-
-      {% if relative_parts.size > 1 %}
-        {% assign subdir = relative_parts[0] %}
-
-        {% unless subdirs contains subdir %}
-          {% assign subdirs = subdirs | push: subdir %}
-        {% endunless %}
-      {% endif %}
-    {% endif %}
-  {% endif %}
-{% endfor %}
-
-<div class="recipe-category-grid">
-  {% assign sorted_subdirs = subdirs | sort %}
-  {% for dir in sorted_subdirs %}
-    <a class="recipe-category-card" href="{{ page.dir | append: dir | append: '/' | relative_url }}">
-      <span class="recipe-category-label">Recipe category</span>
-      <span class="recipe-category-title">{{ dir | replace: "-", " " | capitalize }}</span>
-      <span class="recipe-category-arrow">View recipes →</span>
-    </a>
-  {% endfor %}
-</div>
+{% include recipe/subdirsl.html %}
