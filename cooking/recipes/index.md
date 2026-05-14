@@ -30,11 +30,13 @@ title: Recipes
   {% endif %}
 {% endfor %}
 
-<ul>
-{% assign sorted_subdirs = subdirs | sort %}
-{% for dir in sorted_subdirs %}
-  <li>
-    <a href="{{ page.dir | append: dir | append: '/' | relative_url }}">{{ dir }}</a>
-  </li>
-{% endfor %}
-</ul>
+<div class="recipe-category-grid">
+  {% assign sorted_subdirs = subdirs | sort %}
+  {% for dir in sorted_subdirs %}
+    <a class="recipe-category-card" href="{{ page.dir | append: dir | append: '/' | relative_url }}">
+      <span class="recipe-category-label">Recipe category</span>
+      <span class="recipe-category-title">{{ dir | replace: "-", " " | capitalize }}</span>
+      <span class="recipe-category-arrow">View recipes →</span>
+    </a>
+  {% endfor %}
+</div>
